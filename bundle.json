@@ -2,7 +2,7 @@
     "edgeworker-version": "EWVERSION",
     "bundle-version" : 5,
     "api-version" : "1.0",
-    "description" : "DESCRIPTION",
+    "description" : DESCRIPTION,
     "misc" : {
         "author" : "Jaime"
      }
