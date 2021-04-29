@@ -9,7 +9,7 @@ jobs:
       EWVERSION: 1.1.0
       EWID: 5073
       BUNDLENAME: ew-zipcode-lookup.tgz
-      DESCRIPTION: "Edgescape ZIP Code lookup in EdgeKV"
+      DESCRIPTION: Edgescape ZIP Code lookup in EdgeKV
     working_directory: /root/edgeworkers
     steps:
       - checkout
