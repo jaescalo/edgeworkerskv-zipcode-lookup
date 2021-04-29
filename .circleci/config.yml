@@ -28,7 +28,7 @@ jobs:
             cat bundle.json
             sed -i 's|EWVERSION|'$EWVERSION'|g' bundle.json
             cat bundle.json
-            sed -i 's|DESCRIPTION|'$DESCRIPTION'|g' bundle.json
+            sed -i "s|DESCRIPTION|$DESCRIPTION|g" bundle.json
             cat bundle.json
             tar -czvf ./$BUNDLENAME main.js bundle.json edgekv.js edgekv_tokens.js
       - store_artifacts:
