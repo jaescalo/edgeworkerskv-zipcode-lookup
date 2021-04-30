@@ -4,70 +4,52 @@
 Version: 1.0.0
 
 Purpose:
-  Implements a simple "Hello World" Dynamic Content Assembly EW whereby the 
-  response is dynamically constructed based on the Accept-Language header 
-  in the request.
-  For simplicity, the 1st Accept-Language header encountered is used as key
-  to retrieve the corresponding language specific greeting from EdgeKV.
-  
-Repo: https://github.com/akamai/edgeworkers-examples/edgekv/examples/hello-world
+  Implements a simple ZIP Code status lookup in EdgeKV.
 */
 
 import { createResponse } from 'create-response';
 import { EdgeKV } from './edgekv.js';
+import { logger } from 'log';
 
-// Create simple Hello World Response based on request Accept-Language
-async function hello_world_response(request) {
+// Create simple response based on result of ZIP Code lookup in EdgeKV
+async function zip_code_lookup(request) {
     
-    // Defaults to use if item not in EdgeKV
-    let default_greeting = "Hello World";
-    let language = "en";
-    let content_lang = "en-US";
-    let greeting = "";
-    let err_msg = ""
-    
-    // Retrieve Accept-Language header & extract language key
-    let languages = request.getHeader('Accept-Language');
-    if (languages && languages[0]) {
-        content_lang = languages[0].split(',')[0];
-        language = content_lang.split('-')[0];
-    }
-    let key = language.toLowerCase();
+    // Defaults to use if item is in EdgeKV. When a ZIP Code is blocked EdgeKV will return "blocked";
+    let default_response = "unblocked";
+    logger.log(default_response);
+
+    // Retrieve ZIP Code from Edgescape header and extract he first value
+    let zipCode = request.userLocation.zipCode;
+    let key = zipCode.split(/\+|-/)[0];
+    logger.log(zipCode);
     
     // Set Up EdgeKV
     const edgeKv = new EdgeKV({namespace: "techjam", group: "participant7"});
     
-    // Retrieve the greeting associated with the language using the latter 
-    // as key. We use a default greeting if the item is not found.
+    // Retrieve the status associated with the ZIP Code using the latter 
+    // as key. We use a default status if the item is not found.
     try {
-        greeting = await edgeKv.getText({ item: key, 
-                                          default_value: default_greeting });
+        edgeKvResponse = await edgeKv.getText({ item: key, 
+                                          default_value: default_response });
     } catch (error) {
         // Catch the error and store the error message to use in a response
-        // header for debugging. Use a default greeting as well in this case.
+        // header for debugging. Use a default response as well in this case.
         err_msg = error.toString();
-        greeting = default_greeting;
+        edgeKvResponse = default_response;
     }
-
-    // Construct a simple html response with the greeting (and lang) in the body
-    let html_body = '<!DOCTYPE html> \
-                     <html lang="'+ language + '" xml:lang="' + language +'"> \
-                     <head> \
-                       <meta charset="UTF-8"> \
-                     </head> \
-                     <body><H1>' + greeting + '</H1></body>';
     
-    // We choose to always send back a 200 OK with a default greeting
+    logger.log(edgeKvResponse);
+
+    // We choose to always send back a 200 OK with the status of the ZIP code
     // and just log any errors in the 'X-EKV-ERROR' response header
     let response = {status: 200, 
                     headers: 
                       {'Content-Type': ['text/html'], 
-                       'Content-Language': [content_lang],
                        // Safely Encode the error message to remove unsafe chars
                        // but also replace some encoded strings with safe chars for readability
                        'X-EKV-ERROR': [encodeURI(err_msg).replace(/(%20|%0A|%7B|%22|%7D)/g, " ")]
                       },
-                    body: html_body};
+                    body: edgeKvResponse};
     
     // Send Response
     return createResponse(response.status,
@@ -76,5 +58,5 @@ async function hello_world_response(request) {
 }
 
 export async function responseProvider(request) {
-    return hello_world_response(request)
+    return zip_code_lookup(request)
 }

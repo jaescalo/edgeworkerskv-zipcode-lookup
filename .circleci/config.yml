@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: akamai/edgeworkers
     environment:
-      EWVERSION: 1.1.1
+      EWVERSION: 1.1.2
       EWID: 5073
       BUNDLENAME: ew-zipcode-lookup.tgz
       DESCRIPTION: "Edgescape ZIP Code lookup in EdgeKV"
@@ -25,11 +25,8 @@ jobs:
       - run:
           name: Create Artifact
           command: |
-            cat bundle.json
             sed -i 's|EWVERSION|'$EWVERSION'|g' bundle.json
-            cat bundle.json
             sed -i "s|DESCRIPTION|$DESCRIPTION|g" bundle.json
-            cat bundle.json
             tar -czvf ./$BUNDLENAME main.js bundle.json edgekv.js edgekv_tokens.js
       - store_artifacts:
           path: ew-zipcode-lookup.tgz
