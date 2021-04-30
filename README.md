@@ -1,5 +1,26 @@
 # edgeworkerskv-zipcode-lookup
-Demo for looking up Akamai Edgescape ZIP codes in Edge KV
+Demo for looking up status values about ZIP Codes with Akamai EdgeWorkers EdgeKV
+
+*Keyword(s):* response-provider, key-value, circleci<br>
+
+This example demonstrates how EdgeWorkers and EdgeKV can be used to build a response based on entries stored in EdgeKV (key-value store). This example is based on the [hello-world](https://github.com/akamai/edgeworkers-examples/tree/master/edgekv/examples/hello-world) example in the official Akamai repository.
+
+This EdgeWorker extracts the ZIP Code determined by Akamai's Edgescape and uses it as the key to consult EdgeKV. If the ZIP code exists in EdgeKV as a key then a response is constructed with the value for the key. In this example the values are JSON strings:
+
+`{"zipCodeStatus": "blocked"}`
+
+And if the key does not exist in EdgeKV the default value to return:
+
+`{"zipCodeStatus": "unblocked"}`
+
+[The EdgeKV CLI](https://github.com/akamai/cli-edgeworkers/blob/master/docs/edgekv_cli.md) can be used to write new entries to EdgeKV. For example if a new ZIP code should be blocked the following command can be executed:
+
+`$ akamai edgekv write jsonfile production techjam participant7 75023 ./data.json`
+
+Where 75023 is the ZIP Code (key) and the ./data.json file contains the JSON string used as value.
+
+## Prerequisite
+* Download the latest [edgekv.js](https://github.com/akamai/edgeworkers-examples/blob/master/edgekv/lib/edgekv.js) library file and copy it to your EdgeWorker bundle directory. The one in this repository may not be the latest version.
 
 ## CircleCI (Optional)
 CircleCI can automate the deployment to staging for this EdgeWorker on each `git commit`. The asociated configuration is in the `.circleci.yml` file.
@@ -25,3 +46,5 @@ CircleCI can automate the deployment to staging for this EdgeWorker on each `git
 - [Akamai EdgeWorkers User Guide](https://learn.akamai.com/en-us/webhelp/edgeworkers/edgeworkers-user-guide/GUID-14077BCA-0D9F-422C-8273-2F3E37339D5B.html)
 - [Akamai EdgeWorkers Examples](https://github.com/akamai/edgeworkers-examples)
 - [Akamai CLI for EdgeWorkers](https://developer.akamai.com/legacy/cli/packages/edgeworkers.html)
+- [Akamai EdgeKV](https://learn.akamai.com/en-us/webhelp/edgeworkers/edgekv-getting-started-guide/index.html)
+- [Akamai EdgeKV CLI](https://github.com/akamai/cli-edgeworkers/blob/master/docs/edgekv_cli.md)
