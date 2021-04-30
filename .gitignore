@@ -1,5 +1,6 @@
 # My Exceptions
 .DS_Store
+data.json
 
 # Logs
 logs

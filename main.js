@@ -15,7 +15,7 @@ import { logger } from 'log';
 async function zip_code_lookup(request) {
     
     // Defaults to use if item is in EdgeKV. When a ZIP Code is blocked EdgeKV will return "blocked";
-    let default_response = "unblocked";
+    let default_response = {"zipCodeStatus": "unblocked"};
     let edgeKvResponse = "";
     let err_msg="";
 
@@ -31,7 +31,7 @@ async function zip_code_lookup(request) {
     // Retrieve the status associated with the ZIP Code using the latter 
     // as key. We use a default status if the item is not found.
     try {
-        edgeKvResponse = await edgeKv.getText({ item: key, 
+        edgeKvResponse = await edgeKv.getJson({ item: key, 
                                           default_value: default_response });
     } catch (error) {
         // Catch the error and store the error message to use in a response
@@ -46,7 +46,7 @@ async function zip_code_lookup(request) {
     // and just log any errors in the 'X-EKV-ERROR' response header
     let response = {status: 200, 
                     headers: 
-                      {'Content-Type': ['text/html'], 
+                      {'Content-Type': ['application/json'], 
                        // Safely Encode the error message to remove unsafe chars
                        // but also replace some encoded strings with safe chars for readability
                        'X-EKV-ERROR': [encodeURI(err_msg).replace(/(%20|%0A|%7B|%22|%7D)/g, " ")]
@@ -56,7 +56,7 @@ async function zip_code_lookup(request) {
     // Send Response
     return createResponse(response.status,
                           response.headers,
-                          response.body);
+                          JSON.stringify(response.body));
 }
 
 export async function responseProvider(request) {
