@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: akamai/edgeworkers
     environment:
-      EWVERSION: 1.1.7
+      EWVERSION: 1.1.8
       EWID: 5073
       BUNDLENAME: ew-zipcode-lookup.tgz
       DESCRIPTION: "Edgescape ZIP Code lookup in EdgeKV"
