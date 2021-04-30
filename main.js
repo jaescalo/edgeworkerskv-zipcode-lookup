@@ -17,6 +17,7 @@ async function zip_code_lookup(request) {
     // Defaults to use if item is in EdgeKV. When a ZIP Code is blocked EdgeKV will return "blocked";
     let default_response = "unblocked";
     logger.log(default_response);
+    let err_msg="";
 
     // Retrieve ZIP Code from Edgescape header and extract he first value
     let zipCode = request.userLocation.zipCode;
