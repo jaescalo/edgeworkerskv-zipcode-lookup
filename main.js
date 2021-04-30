@@ -21,8 +21,9 @@ async function zip_code_lookup(request) {
 
     // Retrieve ZIP Code from Edgescape header and extract he first value
     let zipCode = request.userLocation.zipCode;
-    let key = zipCode.split(/\+|-/)[0];
     logger.log(zipCode);
+    let key = zipCode.split(/\+|-/)[0];
+    logger.log(key);
     
     // Set Up EdgeKV
     const edgeKv = new EdgeKV({namespace: "techjam", group: "participant7"});
