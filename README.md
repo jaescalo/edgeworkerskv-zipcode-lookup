@@ -23,7 +23,7 @@ Where 75023 is the ZIP Code (key) and the ./data.json file contains the JSON str
 * Download the latest [edgekv.js](https://github.com/akamai/edgeworkers-examples/blob/master/edgekv/lib/edgekv.js) library file and copy it to your EdgeWorker bundle directory. The one in this repository may not be the latest version.
 
 ## CircleCI (Optional)
-Based on on the [Turbo Akamai Edgeworkers](https://github.com/jaescalo/Turbo-Akamai-EdgeWorkers) project. CircleCI can automate the deployment to staging for this EdgeWorker on each `git commit`. The asociated configuration is in the `.circleci.yml` file.
+Based on the [Turbo Akamai Edgeworkers](https://github.com/jaescalo/Turbo-Akamai-EdgeWorkers) project. CircleCI can automate the deployment to staging for this EdgeWorker on each `git commit`. The asociated configuration is in the `.circleci.yml` file.
 [CircleCI Contexts](https://circleci.com/docs/2.0/contexts/]) is are used to pass on sensitive information in variables to the configuration file `.circleci.yml`. The following variables should be managed under CirecleCI Contexts for this example. 
 
 ### Account Info Variables
