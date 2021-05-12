@@ -39,12 +39,13 @@ jobs:
             sed -i 's|EWVERSION|'$EWVERSION'|g' bundle.json
             sed -i "s|DESCRIPTION|$DESCRIPTION|g" bundle.json
             tar -czvf ./$BUNDLENAME $( find -name "*.js" -or -name "*.json" | cut -c 3-)
-            akamai ew upload --bundle ./$BUNDLENAME $EWID --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
+            
       - store_artifacts:
           path: ew-zipcode-lookup.tgz
       - run: 
           name: "Activate EdgeWorkers to Staging"
           command: |
+            akamai ew upload --bundle ./$BUNDLENAME $EWID --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
             akamai ew activate $EWID STAGING $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
             akamai ew status $EWID --versionId $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
       - when: 
