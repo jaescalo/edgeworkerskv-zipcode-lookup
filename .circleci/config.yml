@@ -14,7 +14,7 @@ jobs:
     docker:
       - image: akamai/edgeworkers
     environment:
-      EWVERSION: 1.1.12
+      EWVERSION: 1.1.13
       EWID: 5073
       BUNDLENAME: ew-zipcode-lookup.tgz
       DESCRIPTION: "Edgescape ZIP Code lookup in EdgeKV"
@@ -47,6 +47,12 @@ jobs:
           command: |
             akamai ew activate $EWID STAGING $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
             akamai ew status $EWID --versionId $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
+      - when: 
+          condition: << pipeline.parameters.production >>
+          steps: 
+            - run: 
+                name: "Activate EdgeWorkers to Production"
+                command: akamai ew activate $EWID PRODUCTION $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY
       - run:
           name: "Activation in Progress"
           command: while :; do OUTPUT=`akamai ew status $EWID --versionId $EWVERSION --edgerc /root/edgeworkers/.edgerc --accountkey $ACCOUNTKEY | awk '/PRESUBMIT|PENDING|IN_PROGRESS/ { print $4 }'`; if [ -z $OUTPUT ]; then echo Activation COMPLETE; break; else sleep 5; fi; done
